@@ -5,7 +5,10 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const candyData = await Candy.find()
-        res.json(candyData)
+        candyData.forEach(candy => {
+            candy.yummy = Boolean(candy.yummy)
+        })
+        res.status(200).json(candyData)
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -13,9 +16,10 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const { id } = req.body
+        const { id } = req.params
         const candyData = await Candy.findById(id)
-        res.json(candyData)
+        candyData.yummy = Boolean(candyData.yummy)
+        res.status(200).json(candyData)
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -25,18 +29,20 @@ router.post('/', async (req, res) => {
     try {
         const newCandy = req.body
         const candyData = await Candy.create(newCandy)
-        res.json(candyData)
+        candyData.yummy = Boolean(candyData.yummy)
+        res.status(200).json(candyData)
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
 })
 
 router.put('/:id', async (req, res) => {
+    // return updated object instead of number 
     try {
-        const { id } = req.body
+        const { id } = req.params
         const changes = req.body
         const candyData = await Candy.update(id, changes)
-        res.json(candyData)
+        res.status(200).json(candyData)
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -44,8 +50,8 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        const { id } = req.body
-        await Candy.delete(id)
+        const { id } = req.params
+        await Candy.remove(id)
         res.json({ message: `Candy with ID ${id} was deleted` })
     } catch (error) {
         res.status(500).json({ message: error.message })

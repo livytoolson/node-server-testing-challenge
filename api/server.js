@@ -11,4 +11,8 @@ server.use(cors());
 server.use(helmet());
 server.use('/api/candy', CandyRouter);
 
+server.get('/', (req, res) => {
+    res.status(200).json({ api: 'API is running' })
+})
+
 module.exports = server;
