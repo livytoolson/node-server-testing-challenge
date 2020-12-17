@@ -4,6 +4,7 @@ const db = require('../data/dbConfig');
 
 const Milkyway = { candy_name: 'Milkyway', candy_brand: 'Mars' }
 const Twizzler = { candy_name: 'Twizzler', candy_brand: 'Hershey' }
+const Snickers = { candy_name: 'Snickers' }
 
 beforeAll(async () => {
     await db.migrate.rollback()
@@ -52,7 +53,15 @@ describe('endpoints', () => {
     })
     describe('[POST] /api/candy/:id', () => {
         it('returns the newly created candy', async () => {
-
+            const res = await request(server).post('/api/candy').send(Twizzler)
+            expect(res.body.id).toBe(1)
+            expect(res.body.candy_name).toBe('Twizzler')
+            expect(res.body.candy_brand).toBe('Hershey')
+        })
+        it('if required fields are not entered "Insert all required fields" is sent back to user', 
+        async () => {
+            const res = await request(server).post('/api/candy').send(Snickers)
+            expect(JSON.stringify(res.body)).toMatch('Insert all required fields')
         })
     })
     describe('[DELETE] /api/candy/:id', () => {

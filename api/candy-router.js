@@ -32,9 +32,13 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const newCandy = req.body
-        const candyData = await Candy.create(newCandy)
-        candyData.yummy = Boolean(candyData.yummy)
-        res.status(200).json(candyData)
+        if (!req.body.candy_brand || !req.body.candy_name) {
+            res.status(404).json('Insert all required fields')
+        } else {
+            const candyData = await Candy.insert(newCandy)
+            candyData.yummy = Boolean(candyData.yummy)
+            res.status(200).json(candyData)
+        }
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
