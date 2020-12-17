@@ -21,8 +21,8 @@ async function insert(candy) {
     return db('candy').where({ id }).first()
 }
 
-function update(id, candy) {
-    return db('candy').where({ id }).update(candy) 
+function update(id, changes) {
+    return db('candy').where({ id }).update(changes) 
 }
 
 function remove(id) {
