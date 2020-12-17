@@ -39,4 +39,34 @@ describe('endpoints', () => {
             expect(res.body[1]).toMatchObject(Twizzler)
         }) 
     })
+    describe('[GET] /api/candy/:id', () => {
+        it('responds with the candy with the given id', async () => {
+            await db('candy').insert(Milkyway)
+            let res = await request(server).get('/api/candy/1')
+            expect(res.body).toMatchObject(Milkyway)
+        })
+        it('responds with a 404 if candy with id does not exist', async () => {
+            let res = await request(server).get('/api/candy/3')
+            expect(res.status).toBe(404)
+        })
+    })
+    describe('[POST] /api/candy/:id', () => {
+        it('returns the newly created candy', async () => {
+
+        })
+    })
+    describe('[DELETE] /api/candy/:id', () => {
+        it('responds with "candy was eaten" when candy is deleted', async () => {
+            await db('candy').insert(Milkyway)
+            let res = await request(server).delete('/api/candy/1')
+            expect(JSON.stringify(res.body)).toMatch('Candy was eaten')
+        })
+        it('responds with a 404 error if candy with id does not exist', async () => {
+            await db('candy').insert(Milkyway)
+            await db('candy').insert(Twizzler)
+            let res = await request(server).delete('/api/candy/5')
+            expect(res.status).toBe(404)
+            
+        })
+    })
 })

@@ -18,8 +18,12 @@ router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params
         const candyData = await Candy.findById(id)
-        candyData.yummy = Boolean(candyData.yummy)
-        res.status(200).json(candyData)
+        if (!candyData) {
+            res.status(404).json(`Candy with id ${id} does not exist`)
+        } else {
+            candyData.yummy = Boolean(candyData.yummy)
+            res.status(200).json(candyData)
+        }
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -51,8 +55,12 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        await Candy.remove(id)
-        res.json({ message: `Candy with ID ${id} was deleted` })
+        const candyData = await Candy.remove(id)
+        if (!candyData) {
+            res.status(404).json(`Candy with id ${id} does not exist`)
+        } else {
+            res.json('Candy was eaten')
+        }
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
