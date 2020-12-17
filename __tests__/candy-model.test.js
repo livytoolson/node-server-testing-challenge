@@ -31,4 +31,18 @@ describe('Candy model', () => {
         expect(res[0]).toHaveProperty('candy_name', 'Milkyway')
         expect(res[0]).toMatchObject(Milkyway) 
     })
+    it('Candy.insert inserts candies into the db', async () => {
+        await Candy.insert(Milkyway)
+        await Candy.insert(Twizzler)
+        const candy = await db('candy')
+        expect(candy).toHaveLength(2)
+    })
+    it('Candy.insert adds the correct candy data for a specifc candy into the db', async () => {
+        let candy = await Candy.insert(Twizzler)
+        expect(candy.candy_name).toBe('Twizzler')
+        expect(candy.candy_brand).toBe('Hershey')
+        candy = await Candy.insert(Milkyway)
+        expect(candy.candy_name).toBe('Milkyway')
+        expect(candy.candy_brand).toBe('Mars')
+    })
 })
